@@ -1,0 +1,108 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import '../models/section.dart';
+
+class SectionProvider extends ChangeNotifier {
+  final Dio _dio = Dio(
+    BaseOptions(baseUrl: dotenv.env['BACKEND_BASE_URL'] ?? ''),
+  );
+
+  List<Section> _sections = [];
+  bool _isLoading = true;
+
+  List<Section> get sections => _sections;
+  bool get isLoading => _isLoading;
+
+  SectionProvider() {
+    getAllSections();
+  }
+
+  void getAllSections() async {
+    _isLoading = true;
+    try {
+      final getAllSectionsEndPoint =
+          dotenv.env['BACKEND_URL']! + dotenv.env['getAllSections']!;
+      final response = await _dio.get(getAllSectionsEndPoint);
+      if (response.statusCode == 200) {
+        _sections = [];
+        final sectionsData = response.data;
+        sectionsData.forEach((section) {
+          _sections.add(Section.fromJson(section));
+        });
+        notifyListeners();
+      } else {
+        _sections = [];
+      }
+    } catch (e) {
+      _sections = [];
+      print(
+        'Error loading all sections: $e',
+      );
+    }
+    _isLoading = false;
+  }
+
+  Future<void> addSection(String name) async {
+    _isLoading = true;
+    try {
+      final addSectionEndPoint =
+          dotenv.env['BACKEND_URL']! + dotenv.env['createSection']!;
+      final response = await _dio.post(
+        addSectionEndPoint,
+        data: {
+          'name': name,
+        },
+      );
+      if (response.statusCode == 201) {
+        print('Added section successfully');
+        getAllSections();
+      }
+    } catch (e) {
+      print(
+        'Error adding new section: $e',
+      );
+    }
+    _isLoading = false;
+  }
+
+  Future<void> updateSection(String id, String name) async {
+    _isLoading = true;
+    try {
+      final updateSectionEndPoint =
+          '${dotenv.env['BACKEND_URL']!}${dotenv.env['updateSection']!}/$id';
+      final response = await _dio.put(
+        updateSectionEndPoint,
+        data: {
+          'name': name,
+        },
+      );
+      if (response.statusCode == 200) {
+        getAllSections();
+      }
+    } catch (e) {
+      print(
+        'Error updating section: $e',
+      );
+    }
+    _isLoading = false;
+  }
+
+  Future<void> deleteSection(String id) async {
+    _isLoading = true;
+    try {
+      final deleteSectionEndPoint =
+          '${dotenv.env['BACKEND_URL']!}${dotenv.env['deleteSection']!}/$id';
+      final response = await _dio.delete(deleteSectionEndPoint);
+      if (response.statusCode == 200) {
+        getAllSections();
+      }
+    } catch (e) {
+      print(
+        'Error deleting section: $e',
+      );
+    }
+    _isLoading = false;
+  }
+}
