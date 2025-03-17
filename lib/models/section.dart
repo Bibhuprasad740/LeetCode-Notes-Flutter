@@ -1,12 +1,14 @@
 class Section {
   final String id;
   final String name;
+  final int numberOfQuestions;
   final String dateAdded;
   final String dateModified;
 
   Section({
     required this.id,
     required this.name,
+    required this.numberOfQuestions,
     required this.dateAdded,
     required this.dateModified,
   });
@@ -16,6 +18,7 @@ class Section {
     return {
       'id': id,
       'name': name,
+      'numberOfQuestions': numberOfQuestions,
       'dateAdded': dateAdded,
       'dateModified': dateModified,
     };
@@ -26,6 +29,7 @@ class Section {
     return Section(
       id: json['_id'],
       name: json['name'],
+      numberOfQuestions: json['numberOfQuestions'],
       dateAdded: json['createdAt'],
       dateModified: json['updatedAt'],
     );

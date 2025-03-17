@@ -10,16 +10,23 @@ class SectionProvider extends ChangeNotifier {
   );
 
   List<Section> _sections = [];
+  int _totalQuestions = 0;
   bool _isLoading = true;
 
   List<Section> get sections => _sections;
   bool get isLoading => _isLoading;
+  int get totalQuestions => _totalQuestions;
 
   SectionProvider() {
     getAllSections();
   }
 
-  void getAllSections() async {
+  void incrementDecrementTotalQuestions(int value) {
+    _totalQuestions += value;
+    notifyListeners();
+  }
+
+  Future<void> getAllSections() async {
     _isLoading = true;
     try {
       final getAllSectionsEndPoint =
@@ -27,9 +34,12 @@ class SectionProvider extends ChangeNotifier {
       final response = await _dio.get(getAllSectionsEndPoint);
       if (response.statusCode == 200) {
         _sections = [];
+        _totalQuestions = 0;
         final sectionsData = response.data;
-        sectionsData.forEach((section) {
-          _sections.add(Section.fromJson(section));
+        sectionsData.forEach((sectionJson) {
+          final section = Section.fromJson(sectionJson);
+          _totalQuestions += section.numberOfQuestions;
+          _sections.add(section);
         });
         notifyListeners();
       } else {
