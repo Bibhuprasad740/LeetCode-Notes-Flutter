@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/problem.dart';
 
@@ -20,6 +21,11 @@ class ProblemProvider extends ChangeNotifier {
     try {
       final getProblemsForSectionEndPoint =
           '${dotenv.env['BACKEND_URL']!}${dotenv.env['getAllProblems']!}/$sectionId';
+
+      final sharedPreference = await SharedPreferences.getInstance();
+      final token = sharedPreference.getString('token');
+      _dio.options.headers['authorization'] = 'Bearer $token';
+
       final response = await _dio.get(getProblemsForSectionEndPoint);
 
       if (response.statusCode == 200) {
@@ -44,6 +50,11 @@ class ProblemProvider extends ChangeNotifier {
     try {
       final updateProblemEndPoint =
           '${dotenv.env['BACKEND_URL']!}${dotenv.env['updateProblem']!}/${problem.id}';
+
+      final sharedPreference = await SharedPreferences.getInstance();
+      final token = sharedPreference.getString('token');
+      _dio.options.headers['authorization'] = 'Bearer $token';
+
       final response =
           await _dio.put(updateProblemEndPoint, data: problem.toJson());
       if (response.statusCode == 200) {
@@ -58,6 +69,11 @@ class ProblemProvider extends ChangeNotifier {
     try {
       final addProblemEndPoint =
           '${dotenv.env['BACKEND_URL']!}${dotenv.env['addProblem']!}';
+
+      final sharedPreference = await SharedPreferences.getInstance();
+      final token = sharedPreference.getString('token');
+      _dio.options.headers['authorization'] = 'Bearer $token';
+
       final response =
           await _dio.post(addProblemEndPoint, data: problem.toJson());
       if (response.statusCode == 201) {
@@ -72,6 +88,11 @@ class ProblemProvider extends ChangeNotifier {
     try {
       final deleteProblemEndPoint =
           '${dotenv.env['BACKEND_URL']!}${dotenv.env['deleteProblem']!}/${problem.id}';
+
+      final sharedPreference = await SharedPreferences.getInstance();
+      final token = sharedPreference.getString('token');
+      _dio.options.headers['authorization'] = 'Bearer $token';
+
       final response = await _dio.delete(deleteProblemEndPoint);
       if (response.statusCode == 204) {
         getProblemsForSection(problem.sectionId);
@@ -79,5 +100,10 @@ class ProblemProvider extends ChangeNotifier {
     } catch (e) {
       print('Error deleting problem: ${problem.id}, $e');
     }
+  }
+
+  void clearData() {
+    _problems = [];
+    notifyListeners();
   }
 }

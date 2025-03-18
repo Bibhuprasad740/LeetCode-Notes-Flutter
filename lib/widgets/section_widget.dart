@@ -91,7 +91,7 @@ class SectionWidgetState extends State<SectionWidget> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '0 problems',
+                            '${widget.section.numberOfQuestions.toString()} problems',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],

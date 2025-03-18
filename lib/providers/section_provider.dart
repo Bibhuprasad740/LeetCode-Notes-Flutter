@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/section.dart';
 
@@ -31,6 +32,11 @@ class SectionProvider extends ChangeNotifier {
     try {
       final getAllSectionsEndPoint =
           dotenv.env['BACKEND_URL']! + dotenv.env['getAllSections']!;
+
+      final sharedPreference = await SharedPreferences.getInstance();
+      final token = sharedPreference.getString('token');
+      _dio.options.headers['authorization'] = 'Bearer $token';
+
       final response = await _dio.get(getAllSectionsEndPoint);
       if (response.statusCode == 200) {
         _sections = [];
@@ -59,6 +65,11 @@ class SectionProvider extends ChangeNotifier {
     try {
       final addSectionEndPoint =
           dotenv.env['BACKEND_URL']! + dotenv.env['createSection']!;
+
+      final sharedPreference = await SharedPreferences.getInstance();
+      final token = sharedPreference.getString('token');
+      _dio.options.headers['authorization'] = 'Bearer $token';
+
       final response = await _dio.post(
         addSectionEndPoint,
         data: {
@@ -66,7 +77,6 @@ class SectionProvider extends ChangeNotifier {
         },
       );
       if (response.statusCode == 201) {
-        print('Added section successfully');
         getAllSections();
       }
     } catch (e) {
@@ -82,6 +92,11 @@ class SectionProvider extends ChangeNotifier {
     try {
       final updateSectionEndPoint =
           '${dotenv.env['BACKEND_URL']!}${dotenv.env['updateSection']!}/$id';
+
+      final sharedPreference = await SharedPreferences.getInstance();
+      final token = sharedPreference.getString('token');
+      _dio.options.headers['authorization'] = 'Bearer $token';
+
       final response = await _dio.put(
         updateSectionEndPoint,
         data: {
@@ -104,9 +119,16 @@ class SectionProvider extends ChangeNotifier {
     try {
       final deleteSectionEndPoint =
           '${dotenv.env['BACKEND_URL']!}${dotenv.env['deleteSection']!}/$id';
+
+      final sharedPreference = await SharedPreferences.getInstance();
+      final token = sharedPreference.getString('token');
+      _dio.options.headers['authorization'] = 'Bearer $token';
+
       final response = await _dio.delete(deleteSectionEndPoint);
       if (response.statusCode == 200) {
         getAllSections();
+      } else {
+        print(response);
       }
     } catch (e) {
       print(
@@ -114,5 +136,11 @@ class SectionProvider extends ChangeNotifier {
       );
     }
     _isLoading = false;
+  }
+
+  void clearData() {
+    _sections = [];
+    _totalQuestions = 0;
+    notifyListeners();
   }
 }

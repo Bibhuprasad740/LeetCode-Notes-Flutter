@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Common Colors
-  static const Color primary = Colors.indigo; // Dark orange
+  static const Color primary = Color.fromARGB(255, 42, 58, 146); // Dark orange
   static const Color secondary =
       Color.fromARGB(255, 179, 120, 24); // Green (complementary to orange)
   static const Color error = Color(0xFFE53935); // Clear red
@@ -13,7 +13,8 @@ class AppColors {
   static const Color lightPrimaryFont = Color(0xFF212121); // Nearly black
   static const Color lightSecondaryFont = Color(0xFF757575); // Medium gray
   static const Color lightPlaceholder = Color(0xFFBDBDBD); // Light gray
-  static const Color lightTextField = Color(0xFFF5F5F5); // Off-white
+  static const Color lightTextField =
+      Color.fromARGB(255, 0, 14, 49); // Off-white
   static const Color lightBackground =
       Color.fromARGB(255, 240, 240, 240); // White
   static const Color lightSurface = Colors.white; // white
@@ -25,7 +26,8 @@ class AppColors {
   static const Color darkPrimaryFont = Color(0xFFEEEEEE); // Off-white
   static const Color darkSecondaryFont = Color(0xFFB0B0B0); // Light gray
   static const Color darkPlaceholder = Color(0xFF616161); // Dark gray
-  static const Color darkTextField = Color(0xFF303030); // Very dark gray
+  static const Color darkTextField =
+      Color.fromARGB(255, 183, 196, 255); // Very dark gray
   static const Color darkBackground = Color(0xFF1E1E1E); // Dark gray
   static const Color darkSurface = Color(0xFF121212); // Nearly black
   static const Color darkCard = Color.fromARGB(255, 20, 20, 20); // Dark gray

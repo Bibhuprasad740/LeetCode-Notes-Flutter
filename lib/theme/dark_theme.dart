@@ -61,7 +61,10 @@ ThemeData darkTheme = ThemeData(
       borderRadius: BorderRadius.circular(12),
       borderSide: const BorderSide(color: AppColors.primary, width: 1),
     ),
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    contentPadding: const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 20,
+    ),
   ),
 
   // Card theme - important for food items

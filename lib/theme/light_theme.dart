@@ -49,22 +49,23 @@ ThemeData lightTheme = ThemeData(
   ),
 
   // Input decoration
-  inputDecorationTheme: const InputDecorationTheme(
+  inputDecorationTheme: InputDecorationTheme(
     filled: true,
     fillColor: AppColors.lightTextField,
-    hintStyle: TextStyle(color: AppColors.lightPlaceholder, fontSize: 14),
+    hintStyle: const TextStyle(color: AppColors.lightPlaceholder, fontSize: 14),
     isDense: true,
     border: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: AppColors.primary,
-      ),
+      borderSide: BorderSide.none,
+      borderRadius: BorderRadius.circular(12),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: AppColors.primary,
-      ),
+      borderSide: const BorderSide(color: AppColors.primary, width: 1),
+      borderRadius: BorderRadius.circular(12),
     ),
-    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    contentPadding: const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 20,
+    ),
   ),
 
   // Card theme - important for food items

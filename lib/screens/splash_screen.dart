@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.forward();
 
     // Navigate to home screen after animations
-    navigateToHomeScreen();
+    navigateToAuthScreen();
   }
 
   @override
@@ -65,11 +65,11 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
-  void navigateToHomeScreen() async {
+  void navigateToAuthScreen() async {
     // Wait for animations to complete and add a small delay
     await Future.delayed(const Duration(milliseconds: 2500));
     if (mounted) {
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/auth');
     }
   }
 

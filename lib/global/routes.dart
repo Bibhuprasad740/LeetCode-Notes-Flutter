@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../screens/auth_screen.dart';
 import '../screens/home_screen.dart';
+import '../screens/login_screen.dart';
 import '../screens/problem_details_screen.dart';
 import '../screens/section_details_screen.dart';
+import '../screens/sign_up_screen.dart';
 import '../screens/splash_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -16,6 +19,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   // Handle static routes using a map
   final routes = <String, WidgetBuilder>{
     '/': (context) => const SplashScreen(),
+    '/auth': (context) => const AuthScreen(),
+    'login': (context) => const LoginScreen(),
+    '/signup': (context) => const SignUpScreen(),
   };
 
   WidgetBuilder? builder = routes[settings.name];

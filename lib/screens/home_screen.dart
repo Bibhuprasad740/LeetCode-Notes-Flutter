@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/section_provider.dart';
-import '../providers/theme_provider.dart';
 import '../widgets/add_section_form.dart';
+import '../widgets/custom_app_bar.dart';
+import '../widgets/dashboard_stats.dart';
+import '../widgets/empty_state.dart';
 import '../widgets/section_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   bool _isAddingSection = false;
 
-  // Function to handle refresh
   Future<void> _refreshSections(BuildContext context) async {
     final sectionProvider =
         Provider.of<SectionProvider>(context, listen: false);
@@ -30,59 +31,9 @@ class HomeScreenState extends State<HomeScreen> {
     final totalQuestions = sectionProvider.totalQuestions;
 
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.indigo[50],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Image.asset(
-                'assets/leetcode.png',
-                height: 20,
-                width: 20,
-              ),
-            ),
-            const SizedBox(width: 12),
-            const Text(
-              'LeetCode Notes',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: Colors.indigo,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.dark_mode_outlined,
-              color: Colors.indigo,
-            ),
-            onPressed: () {
-              final themeProvider =
-                  Provider.of<ThemeProvider>(context, listen: false);
-              themeProvider.toggleTheme();
-            },
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            onPressed: () => _refreshSections(context),
-            icon: const Icon(
-              Icons.refresh,
-            ),
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
+      appBar: const CustomAppBar(),
       floatingActionButton: FloatingActionButton(
         onPressed: () => setState(() => _isAddingSection = true),
         backgroundColor: Colors.indigo,
@@ -91,7 +42,6 @@ class HomeScreenState extends State<HomeScreen> {
       ),
       body: SafeArea(
         child: RefreshIndicator(
-          // Pull-to-refresh functionality
           onRefresh: () => _refreshSections(context),
           child: CustomScrollView(
             slivers: [
@@ -101,63 +51,13 @@ class HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Dashboard Stats
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Colors.indigo[400]!, Colors.indigo[700]!],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.indigo.withOpacity(0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Your Progress',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                _buildStatCard(
-                                  'Sections',
-                                  sections.length.toString(),
-                                  Icons.folder_outlined,
-                                ),
-                                _buildStatCard(
-                                  'Problems',
-                                  totalQuestions.toString(),
-                                  Icons.assignment_outlined,
-                                ),
-                                _buildStatCard(
-                                  'Completed',
-                                  '0',
-                                  Icons.check_circle_outline,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                      DashboardStats(
+                        sectionsCount: sections.length,
+                        totalQuestions: totalQuestions,
+                        completedQuestions:
+                            0, // Replace with actual completed questions count
                       ),
                       const SizedBox(height: 24),
-
-                      // Section Header
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -180,8 +80,6 @@ class HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       const SizedBox(height: 10),
-
-                      // Add Section Form
                       if (_isAddingSection)
                         AddSectionForm(onClose: () {
                           setState(() {
@@ -192,68 +90,13 @@ class HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-
-              // Sections List
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 sliver: sections.isEmpty
                     ? SliverToBoxAdapter(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const SizedBox(height: 40),
-                              Container(
-                                padding: const EdgeInsets.all(24),
-                                decoration: BoxDecoration(
-                                  color: Colors.indigo[50],
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.folder_open,
-                                  size: 48,
-                                  color: Colors.indigo[300],
-                                ),
-                              ),
-                              const SizedBox(height: 24),
-                              Text(
-                                'No sections yet',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey[800],
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              SizedBox(
-                                width: size.width * 0.7,
-                                child: Text(
-                                  'Create your first section to organize your LeetCode notes and track your progress.',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    height: 1.5,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 24),
-                              ElevatedButton.icon(
-                                onPressed: () =>
-                                    setState(() => _isAddingSection = true),
-                                icon: const Icon(Icons.add, size: 18),
-                                label: const Text('Add Your First Section'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.indigo,
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                        child: EmptyState(
+                          onAddSection: () =>
+                              setState(() => _isAddingSection = true),
                         ),
                       )
                     : SliverList(
@@ -274,42 +117,6 @@ class HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildStatCard(String title, String count, IconData icon) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 24,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          count,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.white.withOpacity(0.8),
-          ),
-        ),
-      ],
     );
   }
 }
