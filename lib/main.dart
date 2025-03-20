@@ -13,6 +13,7 @@ import 'providers/theme_provider.dart';
 void main() async {
   // dotenv load
   await dotenv.load();
+  WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MultiProvider(
     providers: [

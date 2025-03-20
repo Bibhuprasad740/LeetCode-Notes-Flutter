@@ -171,7 +171,7 @@ class _SectionDetailsScreenState extends State<SectionDetailsScreen> {
               Text(
                 section.name,
                 style: theme.textTheme.headlineMedium?.copyWith(
-                  color: theme.colorScheme.primary,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               )

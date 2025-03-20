@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:leetcode_notes/widgets/google_button.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
@@ -21,6 +22,11 @@ class _LoginScreenState extends State<LoginScreen> {
       emailController.text.trim(),
       passwordController.text.trim(),
     );
+  }
+
+  void loginWithGoogle() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    await authProvider.loginWithGoogle(context);
   }
 
   @override
@@ -143,6 +149,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 20),
+
+                // Login with Google Button
+                GoogleButton(
+                  onTap: loginWithGoogle,
+                  title: 'Login with Google',
+                ),
+                const SizedBox(height: 20),
               ],
             ),
           ),

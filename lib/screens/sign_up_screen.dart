@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:leetcode_notes/widgets/google_button.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
@@ -141,6 +142,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 20),
+
+                GoogleButton(
+                  onTap: () {},
+                  title: 'Sign up with Google',
+                ),
+
                 const SizedBox(height: 20),
 
                 // Already have an account? Login Link

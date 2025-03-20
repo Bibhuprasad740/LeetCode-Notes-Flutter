@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,6 +54,46 @@ class AuthProvider extends ChangeNotifier {
         'email': email,
         'password': password,
       });
+      if (response.statusCode == 200) {
+        _user = User.fromJson(response.data['user']);
+        _token = response.data['token'];
+
+        await setUserInLocalStorage(_user!, _token!);
+
+        final sectionProvider =
+            Provider.of<SectionProvider>(context, listen: false);
+
+        await sectionProvider.getAllSections(); // Fetch sections
+
+        notifyListeners();
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+  // login with google
+  Future loginWithGoogle(BuildContext context) async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        print('Google sign-in aborted');
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      print('Google sign in user: $googleUser');
+      final accessToken = googleAuth.accessToken;
+      print("Google auth $googleAuth");
+      final signInUrl =
+          dotenv.env['BACKEND_URL']! + dotenv.env['googleSignIn']!;
+      final response = await _dio.post(
+        signInUrl,
+        data: {'accessToken': accessToken},
+      );
+
       if (response.statusCode == 200) {
         _user = User.fromJson(response.data['user']);
         _token = response.data['token'];

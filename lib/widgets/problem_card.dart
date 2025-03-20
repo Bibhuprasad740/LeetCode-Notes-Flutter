@@ -54,7 +54,7 @@ class ProblemCardState extends State<ProblemCard> {
 
     return Card(
       elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 2),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
