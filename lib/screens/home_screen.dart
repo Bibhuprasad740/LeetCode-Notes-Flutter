@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/problem_provider.dart';
 import '../providers/section_provider.dart';
 import '../widgets/add_section_form.dart';
 import '../widgets/custom_app_bar.dart';
@@ -22,6 +23,10 @@ class HomeScreenState extends State<HomeScreen> {
     final sectionProvider =
         Provider.of<SectionProvider>(context, listen: false);
     await sectionProvider.getAllSections();
+
+    final problemProvider =
+        Provider.of<ProblemProvider>(context, listen: false);
+    await problemProvider.getAllProblems();
   }
 
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:leetcode_notes/screens/home_screen.dart';
+import 'package:leetcode_notes/screens/bottom_bar_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
@@ -17,7 +17,7 @@ class AuthScreen extends StatelessWidget {
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
       }
-      return const HomeScreen();
+      return const BottomBarScreen();
     } else {
       return const LoginScreen();
     }

@@ -11,16 +11,22 @@ class ProblemProvider extends ChangeNotifier {
   );
 
   List<Problem> _problems = [];
+  List<Problem> _allProblems = [];
   bool _isLoading = true;
 
+  ProblemProvider() {
+    getAllProblems();
+  }
+
   List<Problem> get problems => _problems;
+  List<Problem> get allProblems => _allProblems;
   bool get isLoading => _isLoading;
 
   Future<void> getProblemsForSection(String sectionId) async {
     _isLoading = true;
     try {
       final getProblemsForSectionEndPoint =
-          '${dotenv.env['BACKEND_URL']!}${dotenv.env['getAllProblems']!}/$sectionId';
+          '${dotenv.env['BACKEND_URL']!}${dotenv.env['getAllProblemsForSection']!}/$sectionId';
 
       final sharedPreference = await SharedPreferences.getInstance();
       final token = sharedPreference.getString('token');
@@ -44,6 +50,30 @@ class ProblemProvider extends ChangeNotifier {
       );
     }
     _isLoading = false;
+  }
+
+  Future<void> getAllProblems() async {
+    try {
+      final getAllProblemsEndPoint =
+          '${dotenv.env['BACKEND_URL']!}${dotenv.env['getAllProblems']!}';
+      final sharedPreference = await SharedPreferences.getInstance();
+      final token = sharedPreference.getString('token');
+      _dio.options.headers['authorization'] = 'Bearer $token';
+
+      final response = await _dio.get(getAllProblemsEndPoint);
+      if (response.statusCode == 200) {
+        final problemsData = response.data;
+        _allProblems = []; // Clear old data before adding new ones
+        problemsData.forEach((problem) {
+          _allProblems.add(Problem.fromJson(problem));
+        });
+
+        notifyListeners();
+      }
+    } catch (e) {
+      _allProblems = [];
+      print('Error loading all problems, $e');
+    }
   }
 
   Future<void> updateProblem(Problem problem) async {

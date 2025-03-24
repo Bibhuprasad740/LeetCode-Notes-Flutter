@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:leetcode_notes/theme/dark_theme.dart';
-import 'package:leetcode_notes/theme/light_theme.dart';
 import 'package:provider/provider.dart';
 
 import 'global/routes.dart';

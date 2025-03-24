@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:leetcode_notes/providers/theme_provider.dart';
+import 'package:leetcode_notes/theme/dark_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -154,9 +156,15 @@ class _SectionDetailsScreenState extends State<SectionDetailsScreen> {
 
   Widget _buildSectionHeader() {
     var theme = Theme.of(context);
+    final bool isDark =
+        Provider.of<ThemeProvider>(context, listen: false).currentTheme ==
+            darkTheme;
+
     return Container(
       padding: const EdgeInsets.all(16),
-      color: theme.colorScheme.primary.withOpacity(0.3),
+      color: theme.colorScheme.primary.withOpacity(
+        isDark ? 0.3 : 1,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -188,7 +196,10 @@ class _SectionDetailsScreenState extends State<SectionDetailsScreen> {
               const SizedBox(width: 8),
               Text(
                 'Added on ${_formatDate(section.dateAdded)}',
-                style: theme.textTheme.bodyMedium?.copyWith(fontSize: 14),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
