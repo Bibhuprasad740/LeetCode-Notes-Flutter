@@ -18,10 +18,6 @@ class SectionProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   int get totalQuestions => _totalQuestions;
 
-  SectionProvider() {
-    getAllSections();
-  }
-
   void incrementDecrementTotalQuestions(int value) {
     _totalQuestions += value;
     notifyListeners();

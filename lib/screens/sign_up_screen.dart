@@ -44,6 +44,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _emailController.text.trim(), _passwordController.text.trim());
   }
 
+  void signUpWithGoogle() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    await authProvider.signupWithGoogle(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -145,7 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 20),
 
                 GoogleButton(
-                  onTap: () {},
+                  onTap: signUpWithGoogle,
                   title: 'Sign up with Google',
                 ),
 

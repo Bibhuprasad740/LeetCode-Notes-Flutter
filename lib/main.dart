@@ -35,9 +35,9 @@ class MyApp extends StatelessWidget {
       builder: (context, themeProvider, child) => MaterialApp(
         title: 'LeetCode Notes',
         debugShowCheckedModeBanner: false,
-        // theme: themeProvider.currentTheme,
+        theme: themeProvider.currentTheme,
         // theme: lightTheme,
-        theme: darkTheme,
+        // theme: darkTheme,
         initialRoute: '/',
         onGenerateRoute: generateRoute,
       ),

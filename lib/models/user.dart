@@ -2,6 +2,7 @@ class User {
   String id;
   String name;
   String email;
+  String? photoUrl;
   String createdAt;
   String updatedAt;
 
@@ -11,6 +12,7 @@ class User {
     required this.email,
     required this.createdAt,
     required this.updatedAt,
+    this.photoUrl,
   });
 
   Map<String, dynamic> toJson() {
@@ -20,6 +22,7 @@ class User {
       'email': email,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
+      'photoUrl': photoUrl ?? '',
     };
   }
 
@@ -30,6 +33,7 @@ class User {
       email: json['email'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
+      photoUrl: json['photoUrl'] ?? '',
     );
   }
 }

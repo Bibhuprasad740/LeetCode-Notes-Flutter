@@ -25,6 +25,12 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _refreshSections(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final sectionProvider = Provider.of<SectionProvider>(context);
     final sections = sectionProvider.sections;

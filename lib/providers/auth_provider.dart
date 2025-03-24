@@ -36,6 +36,8 @@ class AuthProvider extends ChangeNotifier {
       _token = sharedPreference.getString("token");
       notifyListeners();
     }
+
+    // print('Fetched user from local storage is: $_user');
     _isLoading = false;
   }
 
@@ -84,9 +86,7 @@ class AuthProvider extends ChangeNotifier {
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-      print('Google sign in user: $googleUser');
       final accessToken = googleAuth.accessToken;
-      print("Google auth $googleAuth");
       final signInUrl =
           dotenv.env['BACKEND_URL']! + dotenv.env['googleSignIn']!;
       final response = await _dio.post(
@@ -111,6 +111,10 @@ class AuthProvider extends ChangeNotifier {
       print('Error: $error');
     }
   }
+
+  // googleUser = GoogleSignInAccount:{displayName: Bibhu Prasad Sahoo, email: sahoo.bibhuprasad740@gmail.com, id: 102697759799249608547, photoUrl: https://lh3.googleusercontent.com/a/ACg8ocK2n2IjsTKckR4DhmhkXgdRejwlum4c3ZUNcGJKB_u9ptjNs7sy, serverAuthCode: null}
+
+  // googleAuth = GoogleSignInAuthentication:Instance of 'GoogleSignInTokenData'
 
   Future register(
       BuildContext context, String name, String email, String password) async {
@@ -137,6 +141,41 @@ class AuthProvider extends ChangeNotifier {
       }
     } catch (error) {
       print('Error: $error');
+    }
+  }
+
+  Future signupWithGoogle(BuildContext context) async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        print('Google sign-in aborted');
+        return;
+      }
+
+      final signInUrl =
+          dotenv.env['BACKEND_URL']! + dotenv.env['googleSignUp']!;
+      final response = await _dio.post(
+        signInUrl,
+        data: {
+          'name': googleUser.displayName ?? 'Google User',
+          'email': googleUser.email,
+          'googleId': googleUser.id,
+        },
+      );
+
+      if (response.statusCode == 201) {
+        _user = User.fromJson(response.data['user']);
+        _token = response.data['token'];
+        await setUserInLocalStorage(_user!, _token!);
+        final sectionProvider =
+            Provider.of<SectionProvider>(context, listen: false);
+
+        await sectionProvider.getAllSections(); // Fetch sections
+
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
